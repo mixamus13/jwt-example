@@ -23,6 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     if (myUser == null) {
       throw new UsernameNotFoundException("Unknown user: " + userName);
     }
+
     return User.builder()
         .username(myUser.getLogin())
         .password(myUser.getPassword())

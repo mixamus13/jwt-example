@@ -22,7 +22,9 @@ public class JWTUtil {
   @Value("${jwt.sessionTime}")
   private long sessionTime;
 
-  // генерация токена (кладем в него имя пользователя и authorities)
+  /**
+   * генерация токена (кладем в него имя пользователя и authorities)
+   */
   public String generateToken(UserDetails userDetails) {
     Map<String, Object> claims = new HashMap<>();
     val commaSeparatedListOfAuthorities = userDetails.getAuthorities()
@@ -33,12 +35,16 @@ public class JWTUtil {
     return createToken(claims, userDetails.getUsername());
   }
 
-  //извлечение имени пользователя из токена (внутри валидация токена)
+  /**
+   * извлечение имени пользователя из токена (внутри валидация токена)
+   */
   public String extractUsername(String token) {
     return extractClaim(token, Claims::getSubject);
   }
 
-  //извлечение authorities (внутри валидация токена)
+  /**
+   * извлечение authorities (внутри валидация токена)
+   */
   public String extractAuthorities(String token) {
     Function<Claims, String> claimsListFunction = claims -> (String) claims.get("authorities");
     return extractClaim(token, claimsListFunction);
@@ -63,7 +69,6 @@ public class JWTUtil {
         .setExpiration(expireTimeFromNow())
         .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
   }
-
 
   private Date expireTimeFromNow() {
     return new Date(System.currentTimeMillis() + sessionTime);

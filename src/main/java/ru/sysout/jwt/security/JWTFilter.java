@@ -24,6 +24,11 @@ public class JWTFilter extends OncePerRequestFilter {
     this.userDetailsService = userDetailsService;
   }
 
+  /**
+   * если подпись не совпадает с вычисленной, то SignatureException
+   * если подпись некорректная (не парсится) то MalformedJwtException
+   * если подпись истекла по времени,  то ExpiredJwtException
+   */
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
       throws ServletException, IOException {
@@ -35,9 +40,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
     if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
       jwt = authorizationHeader.substring(7);
-      /*если подпись не совпадает с вычисленной, то SignatureException
-      если подпись некорректная (не парсится) то MalformedJwtException
-      если подпись истекла по времени,  то ExpiredJwtException*/
       username = jwtUtil.extractUsername(jwt);
     }
 

@@ -10,6 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,7 @@ public class JWTUtil {
     Map<String, Object> claims = new HashMap<>();
     val commaSeparatedListOfAuthorities = userDetails.getAuthorities()
         .stream()
-        .map(a -> a.getAuthority())
+        .map(GrantedAuthority::getAuthority)
         .collect(Collectors.joining(","));
     claims.put("authorities", commaSeparatedListOfAuthorities);
     return createToken(claims, userDetails.getUsername());
@@ -57,7 +58,10 @@ public class JWTUtil {
   }
 
   private Claims extractAllClaims(String token) {
-    return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+    return Jwts.parser()
+        .setSigningKey(SECRET_KEY)
+        .parseClaimsJws(token)
+        .getBody();
   }
 
 

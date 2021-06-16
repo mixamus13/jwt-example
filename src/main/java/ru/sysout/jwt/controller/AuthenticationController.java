@@ -33,7 +33,8 @@ public class AuthenticationController {
   public AuthResponse createAuthenticationToken(@RequestBody AuthRequest authRequest) {
     Authentication authentication;
     try {
-      authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getName(), authRequest.getPassword()));
+      authentication = authenticationManager.authenticate(
+          new UsernamePasswordAuthenticationToken(authRequest.getName(), authRequest.getPassword()));
       System.out.println(authentication);
     } catch (BadCredentialsException e) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Имя или from неправильны", e);

@@ -1,6 +1,7 @@
 package ru.sysout.jwt.security;
 
 public class AuthResponse {
+
   private String jwtToken;
 
   public AuthResponse() {

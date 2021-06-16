@@ -1,6 +1,5 @@
 package ru.sysout.jwt.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -19,11 +18,13 @@ import ru.sysout.jwt.security.JWTUtil;
 @RestController
 public class AuthenticationController {
 
-  @Autowired
-  private AuthenticationManager authenticationManager;
+  private final AuthenticationManager authenticationManager;
+  private final JWTUtil jwtTokenUtil;
 
-  @Autowired
-  private JWTUtil jwtTokenUtil;
+  public AuthenticationController(AuthenticationManager authenticationManager, JWTUtil jwtTokenUtil) {
+    this.authenticationManager = authenticationManager;
+    this.jwtTokenUtil = jwtTokenUtil;
+  }
 
   @PostMapping("/authenticate")
   @ResponseStatus(HttpStatus.OK)

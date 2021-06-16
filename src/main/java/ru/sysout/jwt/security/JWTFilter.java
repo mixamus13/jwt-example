@@ -1,14 +1,12 @@
 package ru.sysout.jwt.security;
 
 import java.io.IOException;
-import java.util.List;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.val;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -18,11 +16,13 @@ import ru.sysout.jwt.service.CustomUserDetailsService;
 @Component
 public class JWTFilter extends OncePerRequestFilter {
 
-  @Autowired
-  private JWTUtil jwtUtil;
+  private final JWTUtil jwtUtil;
+  private final CustomUserDetailsService userDetailsService;
 
-  @Autowired
-  CustomUserDetailsService userDetailsService;
+  public JWTFilter(JWTUtil jwtUtil, CustomUserDetailsService userDetailsService) {
+    this.jwtUtil = jwtUtil;
+    this.userDetailsService = userDetailsService;
+  }
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -41,12 +41,12 @@ public class JWTFilter extends OncePerRequestFilter {
       username = jwtUtil.extractUsername(jwt);
     }
 
-
     if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
       String commaSeparatedListOfAuthorities = jwtUtil.extractAuthorities(jwt);
-      List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(commaSeparatedListOfAuthorities);
-      UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+      val authorities = AuthorityUtils
+          .commaSeparatedStringToAuthorityList(commaSeparatedListOfAuthorities);
+      val usernamePasswordAuthenticationToken =
           new UsernamePasswordAuthenticationToken(
               username, null, authorities);
 
@@ -55,5 +55,4 @@ public class JWTFilter extends OncePerRequestFilter {
     }
     chain.doFilter(request, response);
   }
-
 }

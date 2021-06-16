@@ -24,7 +24,10 @@ public class JWTUtil {
   // генерация токена (кладем в него имя пользователя и authorities)
   public String generateToken(UserDetails userDetails) {
     Map<String, Object> claims = new HashMap<>();
-    String commaSeparatedListOfAuthorities = userDetails.getAuthorities().stream().map(a -> a.getAuthority()).collect(Collectors.joining(","));
+    String commaSeparatedListOfAuthorities = userDetails.getAuthorities()
+        .stream()
+        .map(a -> a.getAuthority())
+        .collect(Collectors.joining(","));
     claims.put("authorities", commaSeparatedListOfAuthorities);
     return createToken(claims, userDetails.getUsername());
   }
@@ -55,7 +58,8 @@ public class JWTUtil {
 
   private String createToken(Map<String, Object> claims, String subject) {
 
-    return Jwts.builder().setClaims(claims)
+    return Jwts.builder()
+        .setClaims(claims)
         .setSubject(subject)
         .setIssuedAt(new Date(System.currentTimeMillis()))
         .setExpiration(expireTimeFromNow())

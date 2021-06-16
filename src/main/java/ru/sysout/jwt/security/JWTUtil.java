@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class JWTUtil {
   // генерация токена (кладем в него имя пользователя и authorities)
   public String generateToken(UserDetails userDetails) {
     Map<String, Object> claims = new HashMap<>();
-    String commaSeparatedListOfAuthorities = userDetails.getAuthorities()
+    val commaSeparatedListOfAuthorities = userDetails.getAuthorities()
         .stream()
         .map(a -> a.getAuthority())
         .collect(Collectors.joining(","));
@@ -39,9 +40,7 @@ public class JWTUtil {
 
   //извлечение authorities (внутри валидация токена)
   public String extractAuthorities(String token) {
-    Function<Claims, String> claimsListFunction = claims -> {
-      return (String) claims.get("authorities");
-    };
+    Function<Claims, String> claimsListFunction = claims -> (String) claims.get("authorities");
     return extractClaim(token, claimsListFunction);
   }
 
@@ -57,7 +56,6 @@ public class JWTUtil {
 
 
   private String createToken(Map<String, Object> claims, String subject) {
-
     return Jwts.builder()
         .setClaims(claims)
         .setSubject(subject)

@@ -1,5 +1,6 @@
 package ru.sysout.jwt.controller;
 
+import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -34,10 +35,10 @@ public class AuthenticationController {
       authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getName(), authRequest.getPassword()));
       System.out.println(authentication);
     } catch (BadCredentialsException e) {
-      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Имя или пароль неправильны", e);
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Имя или from неправильны", e);
     }
     // при создании токена в него кладется username как Subject и список authorities как кастомный claim
-    String jwt = jwtTokenUtil.generateToken((UserDetails) authentication.getPrincipal());
+    val jwt = jwtTokenUtil.generateToken((UserDetails) authentication.getPrincipal());
 
     return new AuthResponse(jwt);
   }

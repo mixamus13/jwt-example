@@ -1,6 +1,5 @@
 package ru.sysout.jwt.controller;
 
-import javax.security.auth.Subject;
 import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,9 +38,7 @@ public class AuthenticationController {
     } catch (BadCredentialsException e) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Имя или from неправильны", e);
     }
-    /**
-     * при создании токена в него кладется username как Subject и список authorities как кастомный claim
-     */
+    /* при создании токена в него кладется username как Subject и список authorities как кастомный claim */
     val jwt = jwtTokenUtil.generateToken((UserDetails) authentication.getPrincipal());
 
     return new AuthResponse(jwt);

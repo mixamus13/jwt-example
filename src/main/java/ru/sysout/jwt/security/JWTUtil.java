@@ -18,10 +18,10 @@ import org.springframework.stereotype.Service;
 public class JWTUtil {
 
   @Value("${jwt.secret}")
-  private String SECRET_KEY;
+  private final String SECRET_KEY = "secret_key";
 
   @Value("${jwt.sessionTime}")
-  private long sessionTime;
+  private final long sessionTime = 120000000;
 
   /**
    * генерация токена (кладем в него имя пользователя и authorities)
@@ -47,7 +47,8 @@ public class JWTUtil {
    * извлечение authorities (внутри валидация токена)
    */
   public String extractAuthorities(String token) {
-    Function<Claims, String> claimsListFunction = claims -> (String) claims.get("authorities");
+    Function<Claims, String> claimsListFunction =
+        claims -> (String) claims.get("authorities");
     return extractClaim(token, claimsListFunction);
   }
 
@@ -71,7 +72,8 @@ public class JWTUtil {
         .setSubject(subject)
         .setIssuedAt(new Date(System.currentTimeMillis()))
         .setExpiration(expireTimeFromNow())
-        .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
+        .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+        .compact();
   }
 
   private Date expireTimeFromNow() {

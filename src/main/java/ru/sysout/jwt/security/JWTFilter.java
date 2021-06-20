@@ -25,16 +25,14 @@ public class JWTFilter extends OncePerRequestFilter {
   }
 
   /**
-   * если подпись не совпадает с вычисленной, то SignatureException
-   * если подпись некорректная (не парсится) то MalformedJwtException
-   * если подпись истекла по времени,  то ExpiredJwtException
+   * если подпись не совпадает с вычисленной, то SignatureException если подпись некорректная (не парсится) то MalformedJwtException если подпись истекла по
+   * времени,  то ExpiredJwtException
    */
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
       throws ServletException, IOException {
 
     final String authorizationHeader = request.getHeader("Authorization");
-
     String username = null;
     String jwt = null;
 
@@ -45,15 +43,12 @@ public class JWTFilter extends OncePerRequestFilter {
 
     if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-      String commaSeparatedListOfAuthorities = jwtUtil.extractAuthorities(jwt);
+      val commaSeparatedListOfAuthorities = jwtUtil.extractAuthorities(jwt);
       val authorities = AuthorityUtils
           .commaSeparatedStringToAuthorityList(commaSeparatedListOfAuthorities);
       val usernamePasswordAuthenticationToken =
-          new UsernamePasswordAuthenticationToken(
-              username, null, authorities);
-
+          new UsernamePasswordAuthenticationToken(username, null, authorities);
       SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-
     }
     chain.doFilter(request, response);
   }
